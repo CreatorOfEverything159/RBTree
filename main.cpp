@@ -16,48 +16,30 @@ using namespace std;
 
 int main() {
 
-    RBTree tree;
-    tree.addNode(50);
-    tree.addNode(30);
-    tree.addNode(40);
-    tree.addNode(35);
-    tree.addNode(36);
-    tree.addNode(37);
-    tree.addNode(38);
-    tree.addNode(39);
-    cout << " ===================== " << endl;
-    tree.print();
-    cout << " ===================== " << endl;
-    tree.addNode(39);
-    tree.print();
+    const int size = 15;
+    int a[size];
+    srand( time(0) );
 
+    for (int & i : a) {
+        i = 1 + rand() % size;
+    }
 
-    cout << " ===================== " << endl;
-    tree.removeNode(39);
-    tree.print();
-    cout << " ===================== " << endl;
-    tree.removeNode(39);
-    tree.print();
-    cout << " ===================== " << endl;
-    tree.removeNode(37);
-    tree.print();
+    cout << endl;
 
-
-    cout << " ===================== " << endl;
-    cout << tree.search(51) << endl;
 
     RBTree tree1;
-    tree1.addNode(4);
-    tree1.addNode(5);
-    tree1.addNode(6);
-    tree1.addNode(7);
-
     RBTree tree2;
-    tree2.addNode(7);
-    tree2.addNode(6);
-    tree2.addNode(5);
-    tree2.addNode(4);
-    tree2.addNode(4);
+
+    for (int i = 0; i < size; i++) {
+        tree1.addNode(a[i]);
+        tree2.addNode(a[size - i - 1]);
+    }
+
+    tree1.addNode(5);
+
+    tree1.print();
+    cout << "=====================" << endl;
+    tree2.print();
 
 
     cout << "tree1 == tree2: " << tree1.compare(tree2) << endl;

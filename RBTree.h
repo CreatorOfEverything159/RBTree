@@ -21,7 +21,7 @@ class RBTree {
         TreeNode *rightChild;
     };
 
-    TreeNode *nullNode = new TreeNode{
+    TreeNode *nullNode = new TreeNode {
             0,
             0,
             BLACK,
@@ -142,7 +142,7 @@ private:
                 std::cout << "\x1B[48;2;241;68;69m\x1B[1;38;2;255;255;255m " << node->data << "("
                           << node->counter << ") \033[0m" << std::endl;
             } else {
-                std::cout << "\x1B[48;2;10;10;10m\x1B[1;38;2;255;255;255m " << node->data << "(" << node->counter
+                std::cout << "\x1B[48;2;20;20;20m\x1B[1;38;2;255;255;255m " << node->data << "(" << node->counter
                           << ") \033[0m" << std::endl;
             }
 
@@ -274,23 +274,13 @@ private:
         tree = nullNode;
     }
 
-    TreeNode *runTree(TreeNode *a) {
-        if (a != nullptr) {
-            runTree(a->leftChild);
-            runTree(a->rightChild);
-        }
-        std::cout << a->data << std::endl;
-        return a;
-    }
-
-    void helpCompare(TreeNode *node, std::vector<int> &comp) {
-        if (node != nullNode && node != nullptr) {
-            for (int i = 0; i < node->counter; ++i) {
-                comp.push_back(node->data);
-            }
-            helpCompare(node->leftChild, comp);
-            helpCompare(node->rightChild, comp);
-        }
+    bool runTree(TreeNode *a, RBTree &tree) {
+        return !(a != nullNode
+                 && a != nullptr)
+                 || tree.search(a->data)
+                 && runTree(a->leftChild, tree)
+                 && runTree(a->rightChild, tree)
+                 && a->counter == tree.searchNode(a->data)->counter;
     }
 
 
@@ -303,22 +293,19 @@ public:
         removeTree(root);
     }
 
-    bool compare(RBTree &bst) {
-        std::vector<int> comp1;
-        std::vector<int> comp2;
-        helpCompare(root, comp1);
-        helpCompare(bst.root, comp2);
-        sort(comp1.begin(), comp1.end());
-        sort(comp2.begin(), comp2.end());
-
-        return comp1 == comp2;
+    bool compare(RBTree &tree) {
+        return runTree(root, tree) && tree.runTree(tree.root, *this);
     }
 
-    bool search(int numb) {
-        if (searchNode(numb))
-            return true;
-        else
+    bool search(int data) {
+        TreeNode *runner = root;
+        while (runner != nullNode && runner->data != data) {
+            runner = (data < runner->data ? runner->leftChild : runner->rightChild);
+        }
+        if (runner == nullNode) {
             return false;
+        }
+        return true;
     }
 
     void addNode(int data) {
@@ -358,6 +345,8 @@ public:
 
             addFix(root, newNode);
         }
+
+
     }
 
     bool removeNode(int data) {
